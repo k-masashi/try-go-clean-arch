@@ -6,7 +6,7 @@ import (
 
 type CourseInputPort interface {
 	GetCourses() (GetCoursesResponse, error)
-	GetCourse(*GetCourseRequestParameters) (GetCourseResponse, error)
+	GetCourse(*GetCourseRequest) (GetCourseResponse, error)
 }
 
 type CourseOutputPort interface {
@@ -14,7 +14,7 @@ type CourseOutputPort interface {
 	GetCourse(*domain.Course) (*GetCourseResponse, error)
 }
 
-type GetCourseRequestParameters struct {
+type GetCourseRequest struct {
 	CourseID domain.CourseID
 }
 
