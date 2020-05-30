@@ -4,18 +4,13 @@ import (
 	"log"
 
 	_ "github.com/go-sql-driver/mysql"
-	"github.com/labstack/echo"
-	"github.com/labstack/echo/middleware"
+	"github.com/k-masashi/try-go-clean-arch/app/infrastructure/http/echo"
 	"github.com/spf13/viper"
 )
 
 func main() {
 	setConfig()
-
-	e := echo.New()
-	e.Use(middleware.Logger())
-	e.Use(middleware.Recover())
-	e.Start(viper.GetString("server.address"))
+	echo.Run()
 }
 
 func setConfig() {
