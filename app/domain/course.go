@@ -1,6 +1,6 @@
 package domain
 
-type CourseID string
+type CourseID int
 
 type Course struct {
 	ID          CourseID
