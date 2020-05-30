@@ -14,10 +14,10 @@ func NewCourseRepository() *CourseRepositoryGateWay {
 
 func (repository *CourseRepositoryGateWay) FindAll() ([]domain.Course, error) {
 	row, error := repository.Query("SELECT id, name, description, created_at FROM course")
-	defer row.Close()
 	if error != nil {
 		return nil, error
 	}
+	defer row.Close()
 
 	var (
 		courseID    int
@@ -25,13 +25,13 @@ func (repository *CourseRepositoryGateWay) FindAll() ([]domain.Course, error) {
 		description string
 		createdAt   string
 	)
-	courses := []domain.Course{ }
-	for row.Next() {
+	courses := []domain.Course{}
+	for row.HasNext() {
 		error = row.Scan(
 			&courseID,
 			&name,
 			&description,
-			&createdAt
+			&createdAt,
 		)
 
 		if error != nil {
@@ -39,26 +39,26 @@ func (repository *CourseRepositoryGateWay) FindAll() ([]domain.Course, error) {
 		}
 
 		courses = append(
-			courses, 
+			courses,
 			domain.Course{
-				ID: domain.CourseID(courseID),
-				Name: name,
+				ID:          domain.CourseID(courseID),
+				Name:        name,
 				Description: description,
-				CreatedAt: createdAt,
-			}
+				CreatedAt:   createdAt,
+			},
 		)
 	}
 	return courses, nil
 }
 
-func (repository *CourseRepositoryGateWay) Find(id domain.CourseID) (*domain.Course, error) {
+func (repository *CourseRepositoryGateWay) FindByID(id domain.CourseID) (*domain.Course, error) {
 	row, error := repository.Query("SELECT id, name, description, created_at FROM course WHERE id = ?", id)
 	defer row.Close()
 	if error != nil {
 		return nil, error
 	}
 
-	if (!row.HasNext()) {
+	if !row.HasNext() {
 		// TODO: Error Handling
 		return nil, nil
 	}
@@ -73,18 +73,18 @@ func (repository *CourseRepositoryGateWay) Find(id domain.CourseID) (*domain.Cou
 		&courseID,
 		&name,
 		&description,
-		&createdAt
+		&createdAt,
 	)
 
 	if error != nil {
 		return nil, error
 	}
 
-	course := domain.Course {
-		ID: domain.CourseID(courseID),
-		Name: name,
+	course := domain.Course{
+		ID:          domain.CourseID(courseID),
+		Name:        name,
 		Description: description,
-		CreatedAt: createdAt,
+		CreatedAt:   createdAt,
 	}
 	return &course, nil
 }
