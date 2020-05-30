@@ -5,8 +5,8 @@ import (
 )
 
 type CourseInputPort interface {
-	GetCourses() (GetCoursesResponse, error)
-	GetCourse(*GetCourseRequest) (GetCourseResponse, error)
+	GetCourses() (*GetCoursesResponse, error)
+	GetCourse(*GetCourseRequest) (*GetCourseResponse, error)
 }
 
 type CourseOutputPort interface {
