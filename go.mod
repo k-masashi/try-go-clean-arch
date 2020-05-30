@@ -3,9 +3,9 @@ module github.com/k-masashi/try-go-clean-arch
 go 1.14
 
 require (
-	github.com/go-sql-driver/mysql v1.5.0 // indirect
+	github.com/go-sql-driver/mysql v1.5.0
 	github.com/grpc-ecosystem/grpc-gateway v1.9.0
-	github.com/labstack/echo v3.3.10+incompatible // indirect
+	github.com/labstack/echo v3.3.10+incompatible
 	github.com/labstack/gommon v0.3.0 // indirect
 	github.com/mattn/go-colorable v0.1.6 // indirect
 	github.com/spf13/viper v1.7.0

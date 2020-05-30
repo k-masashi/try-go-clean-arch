@@ -1,8 +1,6 @@
 package main
 
 import (
-	"database/sql"
-	"fmt"
 	"log"
 
 	_ "github.com/go-sql-driver/mysql"
@@ -13,31 +11,6 @@ import (
 
 func main() {
 	setConfig()
-
-	// DB Settings
-	dbHost := viper.GetString(`database.host`)
-	dbPort := viper.GetString(`database.port`)
-	dbUser := viper.GetString(`database.user`)
-	dbPass := viper.GetString(`database.pass`)
-	dbName := viper.GetString(`database.name`)
-	connectionString := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s", dbUser, dbPass, dbHost, dbPort, dbName)
-	dbConnection, error := sql.Open("mysql", connectionString)
-
-	if error != nil {
-		log.Fatal(error)
-	}
-
-	error = dbConnection.Ping()
-	if error != nil {
-		log.Fatal(error)
-	}
-
-	defer func() {
-		error = dbConnection.Close()
-		if error != nil {
-			log.Fatal(error)
-		}
-	}()
 
 	e := echo.New()
 	e.Use(middleware.Logger())
