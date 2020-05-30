@@ -5,6 +5,9 @@ import (
 	"fmt"
 	"log"
 
+	_ "github.com/go-sql-driver/mysql"
+	"github.com/labstack/echo"
+	"github.com/labstack/echo/middleware"
 	"github.com/spf13/viper"
 )
 
@@ -36,7 +39,10 @@ func main() {
 		}
 	}()
 
-	fmt.Printf("Hello,Go World")
+	e := echo.New()
+	e.Use(middleware.Logger())
+	e.Use(middleware.Recover())
+	e.Start(viper.GetString("server.address"))
 }
 
 func setConfig() {
