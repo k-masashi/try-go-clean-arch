@@ -12,7 +12,6 @@ type CourseController struct {
 }
 
 func NewCourseController(sqlHandler database.SqlHandler) *CourseController {
-	println("sss")
 	return &CourseController{
 		InputPort: interactor.NewCourseInteractor(
 			presenter.NewCourseHTTPPresenter(),
