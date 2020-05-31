@@ -2,6 +2,7 @@ package echo
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/k-masashi/try-go-clean-arch/app/adapter/controller"
 	"github.com/k-masashi/try-go-clean-arch/app/domain"
@@ -10,8 +11,8 @@ import (
 	"github.com/labstack/echo"
 )
 
-type CourseRequest struct {
-	ID int `path:"id" v-get:"required"`
+type CourseRequestParameters struct {
+	ID int `path:"id" validate:"required"`
 }
 
 type Course struct {
@@ -34,18 +35,10 @@ func (server *Server) GetCourses(controller *controller.CourseController) echo.H
 
 func (server *Server) GetCourse(controller *controller.CourseController) echo.HandlerFunc {
 	return func(context echo.Context) error {
-		request := CourseRequest{}
-
-		error := context.Bind(request)
-		if error != nil {
-			return echo.NewHTTPError(http.StatusBadRequest)
+		id, _ := strconv.Atoi(context.QueryParam("id"))
+		request := CourseRequestParameters{
+			ID: id,
 		}
-
-		error = context.Validate(request)
-		if error != nil {
-			return echo.NewHTTPError(http.StatusBadRequest)
-		}
-
 		getCourseRequest := port.GetCourseRequest{
 			CourseID: domain.CourseID(request.ID),
 		}

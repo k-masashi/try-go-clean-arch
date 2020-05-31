@@ -11,11 +11,11 @@ type CourseController struct {
 	InputPort server.CourseInputPort
 }
 
-func NewCourseController() *CourseController {
+func NewCourseController(sqlHandler database.SqlHandler) *CourseController {
 	return &CourseController{
 		InputPort: interactor.NewCourseInteractor(
 			presenter.NewCourseHTTPPresenter(),
-			database.NewCourseRepository(),
+			database.NewCourseRepository(sqlHandler),
 		),
 	}
 }

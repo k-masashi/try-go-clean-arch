@@ -5,15 +5,17 @@ import (
 )
 
 type CourseRepositoryGateWay struct {
-	SqlHandler
+	SqlHandler SqlHandler
 }
 
-func NewCourseRepository() *CourseRepositoryGateWay {
-	return &CourseRepositoryGateWay{}
+func NewCourseRepository(sqlHandler SqlHandler) *CourseRepositoryGateWay {
+	return &CourseRepositoryGateWay{
+		SqlHandler: sqlHandler,
+	}
 }
 
 func (repository *CourseRepositoryGateWay) FindAll() ([]domain.Course, error) {
-	row, error := repository.Query("SELECT id, name, description, created_at FROM course")
+	row, error := repository.SqlHandler.Query("SELECT id, name, description, created_at FROM course")
 	if error != nil {
 		return nil, error
 	}
@@ -52,11 +54,11 @@ func (repository *CourseRepositoryGateWay) FindAll() ([]domain.Course, error) {
 }
 
 func (repository *CourseRepositoryGateWay) FindByID(id domain.CourseID) (*domain.Course, error) {
-	row, error := repository.Query("SELECT id, name, description, created_at FROM course WHERE id = ?", id)
-	defer row.Close()
+	row, error := repository.SqlHandler.Query("SELECT id, name, description, created_at FROM course WHERE id = ?", id)
 	if error != nil {
 		return nil, error
 	}
+	defer row.Close()
 
 	if !row.HasNext() {
 		// TODO: Error Handling

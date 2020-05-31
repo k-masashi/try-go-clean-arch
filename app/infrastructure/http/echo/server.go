@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/k-masashi/try-go-clean-arch/app/adapter/controller"
+	"github.com/k-masashi/try-go-clean-arch/app/infrastructure/database"
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
 	"github.com/spf13/viper"
@@ -35,10 +36,15 @@ func (server *Server) setRouter() {
 		middleware.Logger(),
 		middleware.Recover(),
 	)
+	handler, error := database.NewSqlHandler()
+
+	if error != nil {
+		panic(error)
+	}
 
 	api := server.Echo.Group(server.getEndpointRoot())
 	{
-		courseController := controller.NewCourseController()
+		courseController := controller.NewCourseController(handler)
 		api.GET("/courses", server.GetCourses(courseController))
 		api.GET("/course/:id", server.GetCourse(courseController))
 	}

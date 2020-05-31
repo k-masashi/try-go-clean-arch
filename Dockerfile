@@ -1,3 +1,6 @@
+FROM mysql:5.7
+RUN touch /var/log/mysql/mysqld.log
+
 # Builder
 FROM golang:1.14.2-alpine3.11 as builder
 

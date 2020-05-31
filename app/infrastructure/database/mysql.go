@@ -4,7 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 
-	"gateway github.com/k-masashi/try-go-clean-arch/app/adapter/gateway/database"
+	"github.com/k-masashi/try-go-clean-arch/app/adapter/gateway/database"
 	"github.com/spf13/viper"
 )
 
@@ -12,7 +12,7 @@ type SqlHandler struct {
 	Connection *sql.DB
 }
 
-func NewSqlHandler() (gateway.SQLHandler, error) {
+func NewSqlHandler() (database.SqlHandler, error) {
 	dbHost := viper.GetString(`database.host`)
 	dbPort := viper.GetString(`database.port`)
 	dbUser := viper.GetString(`database.user`)
@@ -29,26 +29,14 @@ func NewSqlHandler() (gateway.SQLHandler, error) {
 	if error != nil {
 		return nil, error
 	}
-
-	sqlHandler := SqlHandler{
+	sqlHandler := &SqlHandler{
 		Connection: databaseConnection,
 	}
 	return sqlHandler, nil
 }
 
-func (handler *SqlHandler) Execute(statement string, args ...interface{}) (gateway.Result, error) {
-	result, error := handler.Conn.Exec(statement, args...)
-	if error != nil {
-		return nil, error
-	}
-	sqlResult := SqlResult{
-		Result: result,
-	}
-	return sqlResult, nil
-}
-
-func (handler *SqlHandler) Query(statement string, args ...interface{}) (gateway.Row, error) {
-	rows, error := handler.Conn.Query(statement, args...)
+func (handler *SqlHandler) Query(statement string, args ...interface{}) (database.Row, error) {
+	rows, error := handler.Connection.Query(statement, args...)
 	if error != nil {
 		return new(SqlRow), error
 	}
@@ -58,13 +46,24 @@ func (handler *SqlHandler) Query(statement string, args ...interface{}) (gateway
 	return sqlRow, nil
 }
 
+func (handler *SqlHandler) Execute(statement string, args ...interface{}) (database.Result, error) {
+	result, error := handler.Connection.Exec(statement, args...)
+	if error != nil {
+		return nil, error
+	}
+	sqlResult := SqlResult{
+		Result: result,
+	}
+	return sqlResult, nil
+}
+
 type SqlResult struct {
 	Result sql.Result
 }
 
 func (sqlResult SqlResult) LastInsertId() (int64, error) {
-	result, err := sqlResult.Result.LastInsertId()
-	if err != nil {
+	result, error := sqlResult.Result.LastInsertId()
+	if error != nil {
 		return result, error
 	}
 	return result, nil
@@ -89,7 +88,7 @@ func (sqlRow SqlRow) Scan(dest ...interface{}) error {
 	return nil
 }
 
-func (sqlRow SqlRow) Next() bool {
+func (sqlRow SqlRow) HasNext() bool {
 	return sqlRow.Rows.Next()
 }
 
