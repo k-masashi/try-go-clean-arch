@@ -6,13 +6,12 @@ import (
 
 	"github.com/k-masashi/try-go-clean-arch/app/adapter/controller"
 	"github.com/k-masashi/try-go-clean-arch/app/domain"
-	"github.com/k-masashi/try-go-clean-arch/app/usecase/port/server"
 	port "github.com/k-masashi/try-go-clean-arch/app/usecase/port/server"
 	"github.com/labstack/echo"
 )
 
 type CourseRequestParameters struct {
-	ID int `path:"id" validate:"required"`
+	ID int
 }
 
 type Course struct {
@@ -35,7 +34,7 @@ func (server *Server) GetCourses(controller *controller.CourseController) echo.H
 
 func (server *Server) GetCourse(controller *controller.CourseController) echo.HandlerFunc {
 	return func(context echo.Context) error {
-		id, _ := strconv.Atoi(context.QueryParam("id"))
+		id, _ := strconv.Atoi(context.Param("id"))
 		request := CourseRequestParameters{
 			ID: id,
 		}
@@ -59,7 +58,7 @@ type CoursesResponse struct {
 	Courses []Course `json:"courses"`
 }
 
-func convertToCourseResponse(response *server.GetCourseResponse) (CourseResponse, int) {
+func convertToCourseResponse(response *port.GetCourseResponse) (CourseResponse, int) {
 	var jsonResponse CourseResponse
 
 	if response.Course == nil {
@@ -80,7 +79,7 @@ func convertToCourseResponse(response *server.GetCourseResponse) (CourseResponse
 	return jsonResponse, http.StatusOK
 }
 
-func convertToCourses(response *server.GetCoursesResponse) (CoursesResponse, int) {
+func convertToCourses(response *port.GetCoursesResponse) (CoursesResponse, int) {
 	jsonResponse := CoursesResponse{
 		Courses: []Course{},
 	}
