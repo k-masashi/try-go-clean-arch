@@ -4,11 +4,11 @@ import (
 	"github.com/k-masashi/try-go-clean-arch/app/adapter/gateway/database"
 	"github.com/k-masashi/try-go-clean-arch/app/adapter/presenter"
 	"github.com/k-masashi/try-go-clean-arch/app/usecase/interactor"
-	"github.com/k-masashi/try-go-clean-arch/app/usecase/port/server"
+	"github.com/k-masashi/try-go-clean-arch/app/usecase/port"
 )
 
 type CourseController struct {
-	InputPort server.CourseInputPort
+	InputPort port.CourseInputPort
 }
 
 func NewCourseController(sqlHandler database.SqlHandler) *CourseController {
@@ -20,10 +20,10 @@ func NewCourseController(sqlHandler database.SqlHandler) *CourseController {
 	}
 }
 
-func (controller *CourseController) GetCourses() (*server.GetCoursesResponse, error) {
+func (controller *CourseController) GetCourses() (*port.GetCoursesResponse, error) {
 	return controller.InputPort.GetCourses()
 }
 
-func (controller *CourseController) GetCourse(request *server.GetCourseRequest) (*server.GetCourseResponse, error) {
+func (controller *CourseController) GetCourse(request *port.GetCourseRequest) (*port.GetCourseResponse, error) {
 	return controller.InputPort.GetCourse(request)
 }

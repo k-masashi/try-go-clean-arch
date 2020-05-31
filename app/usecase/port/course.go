@@ -1,4 +1,4 @@
-package server
+package port
 
 import (
 	"github.com/k-masashi/try-go-clean-arch/app/domain"

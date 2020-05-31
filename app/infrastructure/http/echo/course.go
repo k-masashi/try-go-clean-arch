@@ -6,7 +6,7 @@ import (
 
 	"github.com/k-masashi/try-go-clean-arch/app/adapter/controller"
 	"github.com/k-masashi/try-go-clean-arch/app/domain"
-	port "github.com/k-masashi/try-go-clean-arch/app/usecase/port/server"
+	"github.com/k-masashi/try-go-clean-arch/app/usecase/port"
 	"github.com/labstack/echo"
 )
 

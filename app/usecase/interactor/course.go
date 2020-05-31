@@ -1,17 +1,17 @@
 package interactor
 
 import (
+	"github.com/k-masashi/try-go-clean-arch/app/usecase/port"
 	"github.com/k-masashi/try-go-clean-arch/app/usecase/port/repository"
-	"github.com/k-masashi/try-go-clean-arch/app/usecase/port/server"
 )
 
 type CourseInteractor struct {
-	OutputPort       server.CourseOutputPort
+	OutputPort       port.CourseOutputPort
 	CourseRepository repository.CourseRepository
 }
 
 func NewCourseInteractor(
-	outputPort server.CourseOutputPort,
+	outputPort port.CourseOutputPort,
 	courseRepository repository.CourseRepository,
 ) *CourseInteractor {
 	return &CourseInteractor{
@@ -20,7 +20,7 @@ func NewCourseInteractor(
 	}
 }
 
-func (interactor *CourseInteractor) GetCourses() (*server.GetCoursesResponse, error) {
+func (interactor *CourseInteractor) GetCourses() (*port.GetCoursesResponse, error) {
 	response, error := interactor.CourseRepository.FindAll()
 
 	if error != nil {
@@ -30,7 +30,7 @@ func (interactor *CourseInteractor) GetCourses() (*server.GetCoursesResponse, er
 	return interactor.OutputPort.GetCourses(response)
 }
 
-func (interactor *CourseInteractor) GetCourse(request *server.GetCourseRequest) (*server.GetCourseResponse, error) {
+func (interactor *CourseInteractor) GetCourse(request *port.GetCourseRequest) (*port.GetCourseResponse, error) {
 	response, error := interactor.CourseRepository.FindByID(request.CourseID)
 
 	if error != nil {
